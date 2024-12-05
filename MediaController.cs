@@ -18,10 +18,10 @@ public class MediaController : ControllerBase
     }
 
     /// <summary>
-    /// T�l�charge un fichier vers Azure Blob Storage.
+    /// Télécharge un fichier vers Azure Blob Storage.
     /// </summary>
-    /// <param name="file">Fichier � t�l�charger</param>
-    /// <returns>URL du fichier t�l�charg�</returns>
+    /// <param name="file">Fichier à télécharger</param>
+    /// <returns>URL du fichier téléchargé</returns>
     [HttpPost("upload")]
     public async Task<IActionResult> UploadFile([FromForm] UploadFileRequest request)
     {
@@ -56,9 +56,9 @@ public class MediaController : ControllerBase
             var blobClient = _blobContainer.GetBlobClient(fileName);
 
             if (!await blobClient.ExistsAsync())
-                return NotFound("Fichier non trouv�.");
+                return NotFound("Fichier non trouvé.");
 
-            // R�cup�rer le contenu du fichier
+            // Récupérer le contenu du fichier
             var stream = await blobClient.OpenReadAsync();
             var contentType = (await blobClient.GetPropertiesAsync()).Value.ContentType ?? "application/octet-stream";
 
@@ -66,7 +66,7 @@ public class MediaController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Erreur lors de la r�cup�ration du fichier : {ex.Message}");
+            return StatusCode(500, $"Erreur lors de la récupération du fichier : {ex.Message}");
         }
     }
 
@@ -91,30 +91,30 @@ public class MediaController : ControllerBase
         }
         catch (Exception ex)
         {
-            return StatusCode(500, $"Erreur lors de la r�cup�ration de la liste des fichiers : {ex.Message}");
+            return StatusCode(500, $"Erreur lors de la récupération de la liste des fichiers : {ex.Message}");
         }
     }
 
     /// <summary>
     /// Supprime un fichier du conteneur Azure Blob Storage.
     /// </summary>
-    /// <param name="fileName">Nom du fichier � supprimer</param>
+    /// <param name="fileName">Nom du fichier à supprimer</param>
     /// <returns>Statut de suppression</returns>
     [HttpDelete("{fileName}")]
     public async Task<IActionResult> DeleteFile(string fileName)
     {
         try
         {
-            // V�rifier si le fichier existe
+            // Vérifier si le fichier existe
             var blobClient = _blobContainer.GetBlobClient(fileName);
 
             if (!await blobClient.ExistsAsync())
-                return NotFound("Fichier non trouv�.");
+                return NotFound("Fichier non trouvé.");
 
             // Supprimer le fichier
             await blobClient.DeleteAsync();
 
-            return Ok("Fichier supprim� avec succ�s.");
+            return Ok("Fichier supprimé avec succés.");
         }
         catch (Exception ex)
         {
